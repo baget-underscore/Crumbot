@@ -1,0 +1,31 @@
+{
+  "name": "crumbot",
+  "type": "commonjs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node . | pino-pretty -i pid,hostname -t HH:MM:ss",
+    "db": "node dbInit.js | pino-pretty -i pid,hostname -t HH:MM:ss",
+    "lint": "eslint . --fix",
+    "dev": "node deploy-commands.js | pino-pretty -i pid,hostname -t HH:MM:ss && node . | pino-pretty -i pid,hostname -t HH:MM:ss"
+  },
+  "author": "_baget",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.41",
+    "@types/node": "^18.0.6",
+    "discord.js": "^14.11.0",
+    "node-fetch": "^3.2.6",
+    "pino": "^7.11.0",
+    "pino-pretty": "^10.2.0",
+    "prompt-sync": "^4.2.0",
+    "rcon-ts": "^1.2.3",
+    "sequelize": "^6.32.1",
+    "sqlite3": "^5.1.6",
+    "undici": "^5.22.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.43.0"
+  }
+}
