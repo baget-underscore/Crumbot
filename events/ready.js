@@ -1,5 +1,6 @@
 const { Collection, Events } = require('discord.js');
 const { Users, Applications } = require('../dbObjects.js');
+const { load } = require('../dbFunc.js');
 const logger = require('../logger.js');
 
 module.exports = {
