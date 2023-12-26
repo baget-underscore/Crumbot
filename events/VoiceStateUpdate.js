@@ -16,12 +16,12 @@ module.exports = {
             }
         }
         else if (newState.channelId == null) {
-            if (oldState.channel.members.length == null && oldState.channel.name.endsWith('\'s room')) {
+            if (oldState.channel.members.size == 0 && oldState.channel.name.endsWith('\'s room')) {
                 await oldState.channel.delete();
             }
         }
         else if (oldState.channelId !== newState.channelId) {
-            if (oldState.channel.members.length == null && oldState.channel.name.endsWith('\'s room')) {
+            if (oldState.channel.members.size == 0 && oldState.channel.name.endsWith('\'s room')) {
                 await oldState.channel.delete();
             }
             if (newState.channel.name === "Join to create vc") {
