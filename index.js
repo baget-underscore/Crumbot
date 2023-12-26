@@ -3,7 +3,7 @@ const { token } = require('./config.json');
 const logger = require('./logger');
 const fs = require('node:fs');
 const path = require('node:path');
-const { deploy } = require('./modify-cmds');
+const { deploy } = require('./deploy-commands');
 // Client instance, can read messages and members
 const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
