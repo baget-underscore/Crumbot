@@ -14,7 +14,7 @@ const client = new Client({ intents: [
     ]
 });
 
-await deploy();
+deploy();
 
 // Create collection for command cooldowns (cooldown is specified in *command*.js file)
 client.cooldowns = new Collection();

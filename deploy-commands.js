@@ -5,7 +5,7 @@ const path = require('node:path');
 const logger = require('./logger');
 
 module.exports = {
-    async deploy() {
+    deploy() {
         const commands = [];
         const foldersPath = path.join(__dirname, 'commands');
         const commandFolders = fs.readdirSync(foldersPath);
