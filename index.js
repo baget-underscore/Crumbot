@@ -3,7 +3,7 @@ const { token } = require('./config.json');
 const logger = require('./logger');
 const fs = require('node:fs');
 const path = require('node:path');
-
+const { deploy } = require('./modify-cmds');
 // Client instance, can read messages and members
 const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
@@ -13,6 +13,8 @@ const client = new Client({ intents: [
     GatewayIntentBits.MessageContent,
     ]
 });
+
+await deploy();
 
 // Create collection for command cooldowns (cooldown is specified in *command*.js file)
 client.cooldowns = new Collection();
@@ -45,7 +47,6 @@ const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'
 for (const file of eventFiles) {
     const filePath = path.join(eventsPath, file);
     const event = require(filePath);
-    logger.info(event)
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args));
     }
