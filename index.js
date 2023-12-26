@@ -4,15 +4,21 @@ const logger = require('./logger');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const client = new Client({ intents : [
+// Client instance, can read messages and members
+const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.MessageContent,
-                                      ] });
+    ]
+});
 
+// Create collection for command cooldowns (cooldown is specified in *command*.js file)
 client.cooldowns = new Collection();
 client.advertCooldown = 0;
+
+// Add all commands to the client.commands collection
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
@@ -32,22 +38,26 @@ for (const folder of commandFolders) {
     }
 }
 
+// Add all events to the client event listener
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
 for (const file of eventFiles) {
     const filePath = path.join(eventsPath, file);
     const event = require(filePath);
+    logger.info(event)
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args));
     }
-     else {
+    else {
         client.on(event.name, (...args) => event.execute(...args));
     }
 }
 
+// Add error-catching events
 client.on(Events.Debug, m => logger.debug(m));
 client.on(Events.Warn, m => logger.warn(m));
 client.on(Events.Error, m => logger.error(m));
 
+// Login using the token from config
 client.login(token);

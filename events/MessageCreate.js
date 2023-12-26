@@ -3,6 +3,7 @@ const { AttachmentBuilder, EmbedBuilder, Events } = require('discord.js');
 module.exports = {
     name: Events.MessageCreate,
     async execute(message) {
+        // If cooldown is 0, send advertisement embed and raise the cooldown
         if (message.client.advertCooldown === 0 && !(message.author.bot) && message.content.match(/wep|wawet|host|server/)) {
             const wepwaFile = new AttachmentBuilder('./assets/wepwawet-logo.png');
             const wepwaEmbed = new EmbedBuilder()

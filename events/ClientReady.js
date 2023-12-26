@@ -1,12 +1,12 @@
 const { Collection, Events } = require('discord.js');
 const { Users, Applications } = require('../dbObjects.js');
-const { load } = require('../dbFunc.js');
 const logger = require('../logger.js');
 
 module.exports = {
     name: Events.ClientReady,
     once: true,
     async execute(client) {
+        // Read the database, put all tables in client variables
         client.db = {};
 
         client.db.userCache = new Collection();
@@ -23,6 +23,7 @@ module.exports = {
         client.usersInfo.applications = new Collection();
         console.log(client.usersInfo);
 
+        // Decrease all cooldowns every 1 second
         function descreaseCooldown() {
             if (client.advertCooldown > 0) {
                 client.advertCooldown--;

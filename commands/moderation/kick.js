@@ -1,7 +1,6 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
-    cooldown: 5,
     data: new SlashCommandBuilder()
         .setName('kick')
         .setDescription('Kick the selected member.')

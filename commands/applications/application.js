@@ -192,7 +192,6 @@ module.exports = {
             }
     },
     async onButton(interaction) {
-        console.log(interaction.customId);
         if (interaction.customId === 'applicationEventApply') {
             let user = await interaction.client.db.userCache.get(interaction.user.id);
 
@@ -256,8 +255,7 @@ module.exports = {
             await interaction.showModal(applyModal);
         }
         else if (interaction.customId === 'applicationDateSelect') {
-            console.log(interaction.client.usersInfo.applications);
-            interaction.client.usersInfo.applications[interaction.user.id].a4 = interaction.values;
+            interaction.client.usersInfo.applications.get(interaction.user.id).a4 = interaction.values;
             interaction.message.components[0].components.forEach(component => component.data.disabled = true);
             interaction.message.components[1].components.forEach(component => component.data.disabled = false);
             await interaction.update({
@@ -347,7 +345,7 @@ module.exports = {
         }
         else if (interaction.customId === 'applicationCancelApp') {
             await Applications.destroy({ where: { user_id: interaction.user.id, finished: false } });
-                        await confirmation.update({ content: 'Select the dates that you are available on!', components: [dateRow, confirmRow] });
+            await confirmation.update({ content: 'Select the dates that you are available on!', components: [dateRow, confirmRow] });
         }
         else if (interaction.customId === 'applicationAccept' || interaction.customId === 'applicationDeny') {
             await interaction.update({ fetchReply: true });
@@ -383,12 +381,11 @@ module.exports = {
         }
     },
     async onModal(interaction) {
-        console.log(interaction.customId);
         if (interaction.customId === 'applicationApplyModal') {
             const a1 = interaction.fields.getTextInputValue('applicationQuestion1');
             const a2 = interaction.fields.getTextInputValue('applicationQuestion2');
             const a3 = interaction.fields.getTextInputValue('applicationQuestion3');
-            interaction.client.usersInfo.applications.set(interaction.user.id, { a1: a1, a2: a2, a3: a3, a4: '' });
+            interaction.client.usersInfo.applications.set(interaction.user.id, { a1: a1, a2: a2, a3: a3, a4: 'Nothing selected' });
 
             const dateSelect = new StringSelectMenuBuilder()
             .setCustomId('applicationDateSelect')
