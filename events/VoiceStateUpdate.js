@@ -1,19 +1,37 @@
-const { Events } = require('discord.js');
+const { ChannelType, Events } = require('discord.js');
 
 module.exports = {
     name: Events.VoiceStateUpdate,
     async execute(oldState, newState) {
         if (oldState.channelId === newState.channelId) {
-            console.log('User stayed in channel')
         }
         else if (oldState.channelId == null) {
-            console.log(`User joined "${newState.channel.name}"`)
+            if (newState.channel.name === "Join to create vc") {
+                const newRoom = await newState.guild.channels.create({
+                    name: `${newState.member.displayName}'s room`,
+                    type: ChannelType.GuildVoice,
+                    parent: newState.channel.parent
+                });
+                await newState.setChannel(newRoom);
+            }
         }
         else if (newState.channelId == null) {
-            console.log(`User left "${oldState.channel.name}"`)
+            if (oldState.channel.members.length == null && oldState.channel.name.endsWith('\'s room')) {
+                await oldState.channel.delete();
+            }
         }
         else if (oldState.channelId !== newState.channelId) {
-            console.log(`User moved from "${oldState.channel.name}" to "${newState.channel.name}"`)
+            if (oldState.channel.members.length == null && oldState.channel.name.endsWith('\'s room')) {
+                await oldState.channel.delete();
+            }
+            if (newState.channel.name === "Join to create vc") {
+                const newRoom = await newState.guild.channels.create({
+                    name: `${newState.member.displayName}'s room`,
+                    type: ChannelType.GuildVoice,
+                    parent: newState.channel.parent
+                });
+                await newState.setChannel(newRoom);
+            }
         }
     },
 };
