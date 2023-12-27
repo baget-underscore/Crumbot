@@ -1,4 +1,5 @@
 const { AttachmentBuilder, EmbedBuilder, Events } = require('discord.js');
+const logger = require('../logger');
 
 module.exports = {
     name: Events.MessageCreate,
@@ -15,7 +16,7 @@ module.exports = {
 
             const adMsg = await message.channel.send({ embeds: [wepwaEmbed], files: [wepwaFile] });
             message.client.advertCooldown = 120;
-            setTimeout(async () => await adMsg.delete(), 30_000);
+            setTimeout(async () => {try {await adMsg.delete();} catch(e) {logger.warn(e);}}, 30_000);
         }
     },
 };
