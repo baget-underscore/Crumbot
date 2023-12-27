@@ -53,7 +53,7 @@ function createButtons(creator, buttons = []) {
 
 async function getImage(interaction) {
     return new Promise(resolve => {
-        interaction.channel.send({ content: `<a:waiting:${emoji[waiting]}> ${interaction.user} **reply** to this message with an image or image URL`, fetchReply: true })
+        interaction.channel.send({ content: `<a:waiting:${emoji['waiting']}> ${interaction.user} **reply** to this message with an image or image URL`, fetchReply: true })
         .then((reply) => {
             const collector = interaction.channel.createMessageCollector({
                 filter: res => res.author.id === interaction.user.id && res.reference ? res.reference.messageId === reply.id : false,
@@ -70,7 +70,7 @@ async function getImage(interaction) {
                         resolve([m, file]);
                     }
                     else {
-                        await reply.edit({ content: `<a:error:${emoji[error]}> \`${attachment.name}\` is not an image, try again.` });
+                        await reply.edit({ content: `<a:error:${emoji['error']}> \`${attachment.name}\` is not an image, try again.` });
                     }
                 }
                 else if (m.content.match(/https:\/\/(.*)(png|jpg|jpeg)/)) {
@@ -80,7 +80,7 @@ async function getImage(interaction) {
                     resolve([m, file]);
                 }
                 else {
-                    await reply.edit({ content: `<a:error:${emoji[error]}> \`${m.content}\` is not an image, try again.` });
+                    await reply.edit({ content: `<a:error:${emoji['error']}> \`${m.content}\` is not an image, try again.` });
                 }
             });
         });
@@ -319,15 +319,15 @@ to start on the next line!`,
                         break;
                     }
                     case cEmbedStr.startsWith('Title'): {
-                        console.log('Title');
+                        await interaction.reply({ content: 'Feature in development', ephemeral: true });
                         break;
                     }
                     case cEmbedStr.startsWith('Description'): {
-                        console.log('Description');
+                        await interaction.reply({ content: 'Feature in development', ephemeral: true });
                         break;
                     }
                     case cEmbedStr.startsWith('URL'): {
-                        console.log('URL');
+                        await interaction.reply({ content: 'Feature in development', ephemeral: true });
                         break;
                     }
                     default: {
