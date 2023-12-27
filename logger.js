@@ -1,5 +1,4 @@
 const pino = require('pino');
-const oldlogger = pino();
 const logger = pino({
     transport: {
         target: 'pino-pretty',
@@ -11,6 +10,4 @@ const logger = pino({
         }
     },
 });
-oldlogger.info('Test');
-logger.info('Test');
 module.exports = logger;
