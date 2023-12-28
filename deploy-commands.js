@@ -5,7 +5,7 @@ const path = require('node:path');
 const logger = require('./logger');
 
 module.exports = {
-    deploy() {
+    deploy(guild=guildId) {
         const commands = [];
         const foldersPath = path.join(__dirname, 'commands');
         const commandFolders = fs.readdirSync(foldersPath);
@@ -37,7 +37,7 @@ module.exports = {
                 logger.info(`Started refreshing ${commands.length} application (/) commands.`);
 
                 const data = await rest.put(
-                    Routes.applicationGuildCommands(clientId, guildId),
+                    Routes.applicationGuildCommands(clientId, guild),
                     { body: commands },
                 );
 
