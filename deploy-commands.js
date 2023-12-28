@@ -5,7 +5,7 @@ const path = require('node:path');
 const logger = require('./logger');
 
 module.exports = {
-    deploy(guild=guildId) {
+    deploy(guild = guildId) {
         const commands = [];
         const foldersPath = path.join(__dirname, 'commands');
         const commandFolders = fs.readdirSync(foldersPath);
@@ -32,20 +32,20 @@ module.exports = {
 
         const rest = new REST().setToken(token);
 
-        (async () => {
+        (async (g) => {
             try {
                 logger.info(`Started refreshing ${commands.length} application (/) commands.`);
 
                 const data = await rest.put(
-                    Routes.applicationGuildCommands(clientId, guild),
+                    Routes.applicationGuildCommands(clientId, g),
                     { body: commands },
                 );
 
-                logger.info(`Successfully reloaded ${data.length} application (/) commands with testing server.`);
+                logger.info(`Successfully reloaded ${data.length} application (/) commands with provided guild.`);
             }
         catch (error) {
                 logger.error(error);
             }
-        })();
+        })(guild);
     },
 }
