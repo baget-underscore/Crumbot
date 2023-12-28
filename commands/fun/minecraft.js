@@ -5,14 +5,14 @@ const { ip, port, passw } = require('../../config.json');
 module.exports = {
     cooldown: 5,
     category: 'fun',
-    modalId: ['mineraftCommandModal'],
+    modalId: ['minecraftCommandModal'],
     data: new SlashCommandBuilder()
     .setName('minecraft')
     .setDescription('Execute a command on the Minecraft server.')
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
     async execute(interaction) {
         const commandModal = new ModalBuilder()
-        .setCustomId('mineraftCommandModal')
+        .setCustomId('minecraftCommandModal')
         .setTitle('Command');
 
         const commandInput = new TextInputBuilder()
