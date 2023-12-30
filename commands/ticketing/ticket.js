@@ -1,7 +1,8 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
-const { ActionRowBuilder, ButtonBuilder, ChannelSelectMenuBuilder, ComponentType, ModalBuilder, SlashCommandBuilder, PermissionFlagsBits, ChannelType } = require('discord.js');
-const { Users, Panels } = require('../../dbObjects.js');
+const { ActionRowBuilder, ButtonBuilder, ChannelSelectMenuBuilder,
+    ComponentType, ModalBuilder, SlashCommandBuilder,
+    PermissionFlagsBits, ChannelType } = require('discord.js');
 const logger = require('../../logger.js');
 
 module.exports = {
