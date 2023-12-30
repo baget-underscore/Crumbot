@@ -1,11 +1,11 @@
 const { REST, Routes } = require('discord.js');
-const { clientId, guildId, token } = require('./config.json');
+const { clientId, testGuildId, token } = require('./config.js').dc;
 const fs = require('node:fs');
 const path = require('node:path');
 const logger = require('./logger');
 
 module.exports = {
-    deploy(guild = guildId) {
+    deploy(guild = testGuildId) {
         const commands = [];
         const foldersPath = path.join(__dirname, 'commands');
         const commandFolders = fs.readdirSync(foldersPath);
