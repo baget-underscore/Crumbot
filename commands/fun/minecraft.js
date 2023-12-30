@@ -1,6 +1,6 @@
 const { ActionRowBuilder, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle, PermissionFlagsBits } = require('discord.js');
 const { Rcon } = require('rcon-ts');
-const { ip, port, passw } = require('../../config.json');
+const { ip, port, password } = require('../../config.js').mc;
 
 module.exports = {
     cooldown: 5,
@@ -38,7 +38,7 @@ module.exports = {
             const rcon = new Rcon({
                 host: ip,
                 port: port,
-                password: passw,
+                password: password,
                 timeout: 5000,
             });
 

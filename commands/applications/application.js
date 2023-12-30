@@ -5,7 +5,6 @@ const {
 } = require('discord.js');
 const { Users, Applications } = require('../../dbObjects.js');
 const { Op } = require('sequelize');
-const { appResultChannelId } = require('../../config.json');
 const logger = require('../../logger.js');
 
 async function getRandom() {
@@ -334,7 +333,7 @@ module.exports = {
             const appReviewRow = new ActionRowBuilder()
             .addComponents(denyAppButton, acceptAppButton);
 
-            const channel = interaction.client.channels.cache.get(appResultChannelId);
+            const channel = interaction.client.channels.cache.find(channel => channel.name.startsWith('app') && channel.name.endsWith('results'));
             await channel.send({ embeds: [eventAppEmbed], components: [appReviewRow] });
             try {
                 await interaction.user.send({ content: `Your application with ID [${app.app_id}] was submitted! Refer to this ID if you need to create a ticket about your application.` });

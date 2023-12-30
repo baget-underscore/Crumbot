@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const logger = require('../../logger');
-const config = require('../../config.json');
+const { ownerId } = require('../../config.js').dc;
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -40,7 +40,7 @@ module.exports = {
 
     },
     async execute(interaction) {
-        if (!(interaction.user.id === config.ownerId)) return await interaction.reply({ content: 'You do not have permission to use this.', ephemeral: true });
+        if (!(interaction.user.id === ownerId)) return await interaction.reply({ content: 'You do not have permission to use this.', ephemeral: true });
         const commandName = interaction.options.getString('command', true).toLowerCase();
         const command = interaction.client.commands.get(commandName);
 
