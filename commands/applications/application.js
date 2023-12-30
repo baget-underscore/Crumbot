@@ -3,7 +3,6 @@ const {
     ChannelType, EmbedBuilder, ModalBuilder, SlashCommandBuilder,
     StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextInputBuilder, TextInputStyle,
 } = require('discord.js');
-const { Users, Applications } = require('../../dbObjects.js');
 const { Op } = require('sequelize');
 const logger = require('../../logger.js');
 
