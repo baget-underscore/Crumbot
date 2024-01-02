@@ -4,7 +4,6 @@ const {
     EmbedBuilder, MentionableSelectMenuBuilder, ModalBuilder, SlashCommandBuilder,
     StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextInputBuilder, TextInputStyle,
 } = require('discord.js');
-const logger = require('../../logger');
 const emoji = require('../../emoji.json');
 
 function defaultButtons() {
@@ -52,11 +51,14 @@ function createButtons(creator, buttons = []) {
 }
 
 async function getImage(interaction) {
-    return new Promise(resolve => {
-        interaction.channel.send({ content: `<a:waiting:${emoji['waiting']}> ${interaction.user} **reply** to this message with an image or image URL`, fetchReply: true })
+    return new Promise((resolve, reject) => {
+        interaction.channel.send({
+            content: `<:loading:${emoji['loading']}> ${interaction.user}, **reply** <:reply:${emoji["reply"]}> to this message with an image or image URL`,
+            fetchReply: true
+        })
         .then((reply) => {
             const collector = interaction.channel.createMessageCollector({
-                filter: res => res.author.id === interaction.user.id && res.reference ? res.reference.messageId === reply.id : false,
+                filter: res => res.author.id === interaction.user.id && res.reference ? res.reference.messageId === reply.id : false, // author and reference message check
                 max: 1,
                 time: 60_000,
             });
@@ -70,17 +72,18 @@ async function getImage(interaction) {
                         resolve([m, file]);
                     }
                     else {
-                        await reply.edit({ content: `<a:error:${emoji['error']}> \`${attachment.name}\` is not an image, try again.` });
+                        await reply.edit({ content: `<:no:${emoji['no']}> \`${attachment.name}\` is not an image, try again.` });
+                        reject();
                     }
                 }
-                else if (m.content.match(/https:\/\/(.*)(png|jpg|jpeg)/)) {
-                    const file = new AttachmentBuilder(m.content);
-                    console.log(file);
+                else if (m.content.match(/https:\/\/(.*)\.(png|jpg|jpeg)/)) {
+                    const file = new AttachmentBuilder(m.content, { name: m.content.match(/[^\/]*\.png|jpg|jpeg /)});
                     await reply.delete();
                     resolve([m, file]);
                 }
                 else {
-                    await reply.edit({ content: `<a:error:${emoji['error']}> \`${m.content}\` is not an image, try again.` });
+                    await reply.edit({ content: `<:no:${emoji['no']}> \`${m.content}\` is not an image, try again.` });
+                    reject();
                 }
             });
         });
@@ -329,6 +332,9 @@ to start on the next line!`,
                     case cEmbedStr.startsWith('URL'): {
                         await interaction.reply({ content: 'Feature in development', ephemeral: true });
                         break;
+                    }
+                    case cEmbedStr.startsWith('Save'): {
+                        await interaction.reply({ content: `\`\`\`${interaction.message.embeds[0].toJSON()}\`\`\``})
                     }
                     default: {
                         console.log(`No case found for ${cEmbedStr}`);
