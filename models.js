@@ -24,5 +24,10 @@ module.exports = {
             this.members = members,
             this.closed = closed
         }
+    },
+    creatorEmbed: class {
+    constructor() {
+        
     }
+}
 }
