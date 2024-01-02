@@ -3,8 +3,8 @@ const {
     ChannelType, EmbedBuilder, ModalBuilder, SlashCommandBuilder,
     StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextInputBuilder, TextInputStyle,
 } = require('discord.js');
-const { Op } = require('sequelize');
 const logger = require('../../logger.js');
+const { User, Application } = require('../../models.js');
 
 async function getRandom() {
     const application_id = (Math.floor(Math.random() * 99999) + 100000).toString();
@@ -39,7 +39,7 @@ module.exports = {
         )
         .addStringOption(option => option
             .setName('desc')
-            .setDescription('The description of this event.')
+            .setDescription('The description of this application.')
             .setMaxLength(1000),
         )
         .addAttachmentOption(option => option
@@ -81,7 +81,7 @@ module.exports = {
     ),
     async autocomplete(interaction) {
         const focusedOption = interaction.options.getFocused(true);
-        const apps = interaction.client.db.appCache;
+        const apps = interaction.client.pool.Applications;
         const choices = [];
 
         apps.forEach(a => choices.push(a));
@@ -146,7 +146,7 @@ module.exports = {
             case 'view': {
                 appId = interaction.options.getString('application');
 
-                const app = interaction.client.db.appCache.get(appId);
+                const app = interaction.client.pool.Applications.get(appId);
                 if (app) {
                     const target = await interaction.client.users.cache.get(app.user_id);
                     let color = 'Orange';
@@ -182,7 +182,7 @@ module.exports = {
             }
             case 'delete': {
                 appId = interaction.options.getString('application');
-                const appToDelete = await interaction.client.db.appCache.get(appId);
+                const appToDelete = await interaction.client.pool.Applications.get(appId);
                 const deletedId = appToDelete.user_id;
                 await appToDelete.destroy();
                 await interaction.followUp({ content: `Deleted ${interaction.client.users.cache.get(deletedId).username}'s application for ${appToDelete.app_name}`, ephemeral: true });
@@ -191,58 +191,12 @@ module.exports = {
     },
     async onButton(interaction) {
         if (interaction.customId === 'applicationEventApply') {
-            let user = await interaction.client.db.userCache.get(interaction.user.id);
+            let user = await interaction.client.pool.Users.get(interaction.user.id);
 
             if (!user) {
-                user = await Users.create({ user_id: interaction.user.id, event_blacklist: false });
-                interaction.client.db.userCache.set(interaction.user.id, user);
+                user = { userId: interaction.user.id, userName: interaction.user.name };
+                interaction.client.pool.Users.set(interaction.user.id, user);
             }
-            if (user.event_blacklist) {
-                return await interaction.reply({ content: 'You are currently blacklisted from joining events, so you cannot apply.', ephemeral: true });
-            }
-
-            const userApps = Applications.findAll({ where: { user_id: user.user_id, app_name: interaction.message.embeds[0].data.title } });
-            if (userApps.length > 0) {
-                const finishedApps = await Applications.findAll({ where: { user_id: user.user_id, app_name: interaction.message.embeds[0].data.title, finished: true } });
-                if (finishedApps.length > 0) {
-                    return await interaction.reply({ content: 'You already applied! You cannot send another application.', ephemeral: true });
-                }
-            }
-
-            const app_id = await getRandom();
-            const app = await Applications.create({ app_id: app_id, user_id: interaction.user.id, app_name: interaction.message.embeds[0].data.title, finished: false });
-            interaction.client.db.appCache.set(app_id, app);
-
-
-            const applyModal = new ModalBuilder()
-            .setCustomId('applicationApplyModal')
-            .setTitle('Event application');
-
-            const appQuestion1 = new TextInputBuilder()
-            .setCustomId('applicationQuestion1')
-            .setLabel('What\'s your Minecraft name?')
-            .setPlaceholder('_baget')
-            .setRequired(true)
-            .setStyle(TextInputStyle.Short)
-            .setMinLength(4)
-            .setMaxLength(25);
-
-            const appQuestion2 = new TextInputBuilder()
-            .setCustomId('applicationQuestion2')
-            .setLabel('Why do you want to join this event?')
-            .setPlaceholder('I want to participate because I like Minecraft events where you have to work together to survive.')
-            .setRequired(true)
-            .setStyle(TextInputStyle.Paragraph)
-            .setMinLength(40)
-            .setMaxLength(400);
-
-            const appQuestion3 = new TextInputBuilder()
-            .setCustomId('applicationQuestion3')
-            .setLabel('Rule-breakers get banned. Understood?')
-            .setPlaceholder('Yeah')
-            .setRequired(true)
-            .setStyle(TextInputStyle.Short)
-            .setMaxLength(10);
 
             const actionRow1 = new ActionRowBuilder().addComponents(appQuestion1);
             const actionRow2 = new ActionRowBuilder().addComponents(appQuestion2);
