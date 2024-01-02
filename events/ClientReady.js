@@ -31,7 +31,7 @@ module.exports = {
         
         logger.info(`Ready! Logged in as ${client.user.tag}`);
         await sleep(1000);
-        const r = repl.start({ prompt: '>> ', useGlobal: true });
+        const r = repl.start({ prompt: '> ', useGlobal: true });
         r.context.client = client;
     },
 };
