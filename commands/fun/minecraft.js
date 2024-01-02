@@ -33,15 +33,20 @@ module.exports = {
     async onModal(interaction) {
         const commandText = interaction.fields.getTextInputValue('commandTextInput');
         await interaction.deferReply();
-
+        let rcon = null;
         try {
-            const rcon = new Rcon({
+            rcon = new Rcon({
                 host: ip,
                 port: port,
                 password: password,
                 timeout: 5000,
             });
-
+        }
+        catch (e) {
+            await interaction.editReply(`Error occured: ${e}`);
+        }
+        if (rcon === null) return await interaction.editReply('Connecting to the server failed.');
+        try {
             rcon.session(
                 async c => {
                 let res = await c.send(commandText);
